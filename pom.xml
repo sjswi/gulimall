@@ -10,10 +10,14 @@
     <description>聚合-</description>
     <packaging>pom</packaging>
     <modules>
+        <module>gulimall-third-party</module>
         <module>gulimall-product</module>
         <module>gulimall-ware</module>
         <module>gulimall-coupon</module>
         <module>gulimall-order</module>
         <module>gulimall-member</module>
+        <module>renren-fast</module>
+        <module>renren-generator</module>
+        <module>gulimall-common</module>
     </modules>
 </project>
