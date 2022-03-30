@@ -1,9 +1,27 @@
 spring:
+  zipkin:
+    base-url: http://101.201.76.21:9411
+    discovery-client-enabled: false
+    sender:
+      type: web
+    sleuth:
+      sampler:
+        probability: 1
   cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        port: 8719
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 127.0.0.1:8849
     alicloud:
+      sms:
+        host: https://dfsns.market.alicloudapi.com
+        path: /data/send_sms
+        templateId: TPL_0000
+        appCode: 43fee8116ed84548a58133b3a915ae62
+
       access-key: LTAI5tErToPKSFhTYDRHXjmD
       secret-key: VxoVegCEgPdr6Dg6XfIXKPcyEvG5Rp
       oss:
@@ -12,5 +30,12 @@ spring:
   application:
     name: gulimall-third-party
 
+
 server:
   port: 30000
+
+logging:
+  level:
+    com.atguigu: debug
+    org.springframework.cloud.openfeign: debug
+    org.springframework.cloud.sleuth: debug

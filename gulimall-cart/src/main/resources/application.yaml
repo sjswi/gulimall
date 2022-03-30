@@ -1,0 +1,55 @@
+server:
+  port: 20000
+
+spring:
+  zipkin:
+    base-url: http://101.201.76.21:9411
+    discovery-client-enabled: false
+    sender:
+      type: web
+    sleuth:
+      sampler:
+        probability: 1
+  datasource:
+    username: root
+    password: pqhloyxb111
+    url: jdbc:mysql://101.201.76.21:3306/gulimall_pms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    driverClassName: com.mysql.cj.jdbc.Driver
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        port: 8719
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8849
+  session:
+    store-type: redis
+  # 101.37.253.192
+  application:
+    name: gulimall-cart
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  thymeleaf:
+    cache: false
+    suffix: .html
+  redis:
+    host: 101.201.76.21
+    port: 6379
+    password: pqhyxb
+  cache:
+    type: redis
+    redis:
+      time-to-live: -1
+      key-prefix: CACHE_
+      use-key-prefix: true
+      cache-null-values: true
+
+
+
+gulimall:
+  thread:
+    core-size: 20
+    max-szie: 200
+    keep-alive-time: 10

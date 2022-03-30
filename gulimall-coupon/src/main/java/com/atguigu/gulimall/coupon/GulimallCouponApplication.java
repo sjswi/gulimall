@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /*
 * nacos作为配置中心
@@ -33,6 +34,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 * 加载多个配置集
 *   配置中心没有的配置才会读取本地的application.properties
 * */
+@EnableFeignClients
 @SpringBootApplication
 @EnableDiscoveryClient
 public class GulimallCouponApplication {

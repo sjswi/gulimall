@@ -1,15 +1,66 @@
 spring:
+  zipkin:
+    base-url: http://101.201.76.21:9411
+    discovery-client-enabled: false
+    sender:
+      type: web
+    sleuth:
+      sampler:
+        probability: 1
+  mvc:
+    date-format: yyyy-MM-dd HH:mm:ss
   datasource:
     username: root
-    password: 123456
-    url: jdbc:mysql://101.37.253.192:3306/gulimall_oms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    password: pqhloyxb111
+    url: jdbc:mysql://101.201.76.21:3306/gulimall_oms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
     driverClassName: com.mysql.cj.jdbc.Driver
   cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        port: 8719
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 127.0.0.1:8849
   application:
     name: gulimall-order
+  rabbitmq:
+    host: 101.201.76.21
+    port: 5672
+    virtual-host: /
+#    publisher-confirm-type: CORRELATED
+#    publisher-return-type: CORRELATED
+    listener:
+      simple:
+        #自动签收auto  手动 manual
+        acknowledge-mode: manual
+  thymeleaf:
+    cache: false
+    suffix: .html
+
+  redis:
+    host: 101.201.76.21
+    port: 6379
+    password: pqhyxb
+  session:
+    store-type: redis
+  cache:
+    type: redis
+    redis:
+      time-to-live: -1
+      key-prefix: CACHE_
+      use-key-prefix: true
+      cache-null-values: true
+  seata:
+    config:
+      type: nacos
+      nacos:
+        server-addr: 127.0.0.1:8848
+        group: "SEATA_GROUP"
+        namespace: ""
+        dataId: "seataServer.properties"
+        username: "nacos"
+        password: "nacos"
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
@@ -22,3 +73,8 @@ server:
       charset: utf-8
       force: true
       enabled: true
+
+logging:
+  level:
+    com.atguigu.gulimall: debug
+

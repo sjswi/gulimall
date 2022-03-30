@@ -1,7 +1,7 @@
 package com.atguigu.gulimall.product.service.impl;
 
 
-import com.atguigu.gulimall.product.constant.ProductConstant;
+import com.atguigu.common.constant.ProductConstant;
 import com.atguigu.gulimall.product.dao.AttrAttrgroupRelationDao;
 import com.atguigu.gulimall.product.dao.AttrGroupDao;
 import com.atguigu.gulimall.product.dao.CategoryDao;
@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.mysql.cj.util.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -70,7 +71,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 //            保存基本数据
             this.save(attrEntity);
 //            保存关联关系
-            if(attr.getAttrType()==ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()) {
+            if(attr.getAttrType()== ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()) {
 //                当属性是常规属性时才有分组
                 AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = new AttrAttrgroupRelationEntity();
                 attrAttrgroupRelationEntity.setAttrGroupId(attr.getAttrGroupId());
@@ -119,8 +120,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
             if("base".equals(attrType)) {
                 AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = relationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrEntity.getAttrId()));
                 if (attrAttrgroupRelationEntity != null) {
-                    Long attrId = attrAttrgroupRelationEntity.getAttrId();
+                    Long attrId = attrAttrgroupRelationEntity.getAttrGroupId();
                     AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrId);
+//                    System.out.println(attrGroupEntity);
                     if(attrGroupEntity!=null) {
                         attrRespVo.setGroupName(attrGroupEntity.getAttrGroupName());
                     }
@@ -135,11 +137,12 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         pageUtils.setList(respVos);
         return pageUtils;
     }
-
+    @Cacheable(value = "attrinfo", key = "'attrinfo:'+#root.args[0]")
     @Override
     public AttrRespVo getAttrinfo(Long attrId) {
-
+        System.out.println(attrId);
         AttrEntity attrEntity = this.getById(attrId);
+//        System.out.println(this.);
         AttrRespVo attrRespVo = new AttrRespVo();
         try {
             BeanUtils.copyProperties(attrRespVo, attrEntity);
@@ -274,6 +277,17 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         }
         IPage<AttrEntity> page = this.page(new Query<AttrEntity>().getPage(params), wrapper);
         return new PageUtils(page);
+    }
+    /**
+     * @params: List<Long>
+     * @return: List<Long>
+     * @author: yuxiaobing
+     * @date: 2022/3/8
+     **/
+    @Override
+    public List<Long> selectSearchAttrsIds(List<Long> collect1) {
+        return this.baseMapper.selectSearchAttrsList(collect1);
+
     }
 
 }

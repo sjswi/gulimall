@@ -1,0 +1,49 @@
+spring:
+  zipkin:
+    base-url: http://101.201.76.21:9411
+    discovery-client-enabled: false
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1
+  tomcat:
+    uri-encoding: UTF-8
+  rabbitmq:
+    host: 101.201.76.21
+    port: 5672
+    virtual-host: /
+    publisher-confirm-type: CORRELATED
+    publisher-return-type: CORRELATED
+    listener:
+      simple:
+        acknowledge-mode: manual
+  application:
+    name: gulimall-seckill
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        port: 8719
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8849
+  redis:
+    host: 101.201.76.21
+    port: 6379
+    password: pqhyxb
+  task:
+    scheduling:
+      pool:
+        size: 5
+  session:
+    store-type: redis
+
+server:
+  port: 9999
+
+log:
+  level:
+    com.atguigu: debug
+    org.springframework.cloud.openfeign: debug
+    org.springframework.cloud.sleuth: debug

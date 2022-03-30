@@ -1,5 +1,17 @@
 spring:
+  zipkin:
+    base-url: http://101.201.76.21:9411
+    discovery-client-enabled: false
+    sender:
+      type: web
+    sleuth:
+      sampler:
+        probability: 1
   cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        port: 8719
     gateway:
       routes:
         - id: test_route
@@ -23,12 +35,63 @@ spring:
             - Path=/api/thirdparty/**
           filters:
             - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+        - id: member_route
+          uri: lb://gulimall-member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: coupon_route
+          uri: lb://gulimall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: ware_route
+          uri: lb://gulimall-ware
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
         - id: admin_route
           uri: lb://renren-fast
           predicates:
             - Path=/api/**
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+        - id: product_shangcheng
+          uri: lb://gulimall-product
+          predicates:
+            - Host=gulimall.com,item.gulimall.com
+        - id: gulimall_shangcheng_search
+          uri: lb://gulimall-search
+          predicates:
+            - Host=search.gulimall.com
+        - id: gulimall_auth_search
+          uri: lb://gulimall-auth-server
+          predicates:
+            - Host=auth.gulimall.com
+        - id: gulimall_cart
+          uri: lb://gulimall-cart
+          predicates:
+            - Host=cart.gulimall.com
+        - id: gulimall_order
+          uri: lb://gulimall-order
+          predicates:
+            - Host=order.gulimall.com
+        - id: gulimall_member_route
+          uri: lb://gulimall-member
+          predicates:
+            - Host=member.gulimall.com
+        - id: gulimall_coupon_route
+          uri: lb://gulimall-coupon
+          predicates:
+            - Host=coupon.gulimall.com
+        - id: gulimall_seckill_route
+          uri: lb://gulimall-seckill
+          predicates:
+            - Host=seckill.gulimall.com
+
 #      前端项目都带上api前缀
 
 

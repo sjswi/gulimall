@@ -1,0 +1,32 @@
+spring:
+  zipkin:
+    base-url: http://101.201.76.21:9411
+    discovery-client-enabled: false
+    sender:
+      type: web
+    sleuth:
+      sampler:
+        probability: 1
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        port: 8719
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8849
+  application:
+    name: gulimall-search
+  thymeleaf:
+    cache: false
+  redis:
+    host: 101.201.76.21
+    port: 6379
+    password: pqhyxb
+  session:
+    store-type: redis
+server:
+  servlet:
+    session:
+      timeout: 30m
+  port: 6000

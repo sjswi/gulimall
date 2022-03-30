@@ -1,12 +1,19 @@
 package com.atguigu.gulimall.product.service.impl;
 
-import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.entity.AttrEntity;
+import com.atguigu.gulimall.product.service.AttrService;
+import com.atguigu.gulimall.product.vo.AttrGroupWithAttrsVo;
+import com.atguigu.gulimall.product.vo.SpuItemAttrGroupVo;
 import com.mysql.cj.util.StringUtils;
+import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -20,6 +27,9 @@ import com.atguigu.gulimall.product.service.AttrGroupService;
 
 @Service("attrGroupService")
 public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEntity> implements AttrGroupService {
+
+    @Autowired
+    private AttrService attrService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -55,6 +65,41 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
         }
 
+    }
+    /**
+     * @params: Long
+     * @return: List<AttrGroupWithAttrsVo>
+     * @author: yuxiaobing
+     * @date: 2022/3/5
+     * @descrpition: 根据分类id获得所有的分组以及分组里的所有属性
+     **/
+    @Override
+    public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId) {
+//        1、查询分组信息
+        List<AttrGroupEntity> attrGroupEntities = this.list(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+//        2、查询所有属性
+        List<AttrGroupWithAttrsVo> collect = attrGroupEntities.stream().map(attrGroupEntity -> {
+            AttrGroupWithAttrsVo attrGroupWithAttrsVo = new AttrGroupWithAttrsVo();
+            try {
+                BeanUtils.copyProperties(attrGroupWithAttrsVo, attrGroupEntity);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            List<AttrEntity> relationAttr = attrService.getRelationAttr(attrGroupWithAttrsVo.getAttrGroupId());
+
+            attrGroupWithAttrsVo.setAttrs(relationAttr);
+            return attrGroupWithAttrsVo;
+        }).collect(Collectors.toList());
+
+        return collect;
+    }
+
+    @Override
+    public List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId) {
+        //1、查出spu对应的所有属性的分组信息，
+        return this.baseMapper.getAttrGroupWithAttrsBySpuId(spuId, catalogId);
     }
 
 

@@ -1,0 +1,47 @@
+server:
+  port: 13000
+  servlet:
+    session:
+      timeout: 30m
+spring:
+  zipkin:
+    base-url: http://101.201.76.21:9411
+    discovery-client-enabled: false
+    sender:
+      type: web
+    sleuth:
+      sampler:
+        probability: 1
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+        port: 8719
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8849
+  session:
+    store-type: redis
+  redis:
+    host: 101.201.76.21
+    port: 6379
+    password: pqhyxb
+  # 101.37.253.192
+  application:
+    name: gulimall-auth-server
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  thymeleaf:
+    cache: false
+    suffix: .html
+
+
+
+
+
+logging:
+  level:
+    com.atguigu.gulimall: debug
+
+

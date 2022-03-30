@@ -1,15 +1,15 @@
 package com.atguigu.gulimall.ware.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
+import com.atguigu.gulimall.ware.vo.PurchaseDoneVo;
+import com.atguigu.gulimall.ware.vo.MergeVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.gulimall.ware.entity.PurchaseEntity;
 import com.atguigu.gulimall.ware.service.PurchaseService;
@@ -41,7 +41,25 @@ public class PurchaseController {
         return R.ok().put("page", page);
     }
 
+    @RequestMapping("/unreceive/list")
+    public R unreceive_list(@RequestParam Map<String, Object> params){
+        PageUtils page = purchaseService.queryPageUnreceivePurchase(params);
 
+        return R.ok().put("page", page);
+    }
+    /**
+     * 用于合并采购单
+     * **/
+    @PostMapping("/merge")
+    public R unreceive(@RequestBody MergeVo mergeVo){
+        purchaseService.mergePurchase(mergeVo);
+        return R.ok();
+    }
+    @PostMapping("/done")
+    public R finish(@RequestBody PurchaseDoneVo purchaseDoneVo){
+        purchaseService.done(purchaseDoneVo);
+        return R.ok();
+    }
     /**
      * 信息
      */
@@ -57,11 +75,17 @@ public class PurchaseController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody PurchaseEntity purchase){
+        purchase.setUpdateTime(new Date());
 		purchaseService.save(purchase);
 
         return R.ok();
     }
 
+    @PostMapping("/received")
+    public R received(@RequestBody List<Long> ids){
+        purchaseService.received(ids);
+        return R.ok();
+    }
     /**
      * 修改
      */

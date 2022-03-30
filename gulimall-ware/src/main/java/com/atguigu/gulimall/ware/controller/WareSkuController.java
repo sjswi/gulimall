@@ -1,15 +1,19 @@
 package com.atguigu.gulimall.ware.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
+import com.atguigu.common.exception.BizCodeEnum;
+import com.atguigu.common.exception.NoStockException;
+import com.atguigu.common.to.SkuHasStockTo;
+
+import com.atguigu.gulimall.ware.vo.LockStockResult;
+import com.atguigu.gulimall.ware.vo.WareSkuLockVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.gulimall.ware.entity.WareSkuEntity;
 import com.atguigu.gulimall.ware.service.WareSkuService;
@@ -31,6 +35,25 @@ public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
 
+    @PostMapping("/lock/order")
+    public R orderLockStock(@RequestBody WareSkuLockVo wareSkuLockVo){
+        System.out.println("该方法调用了");
+        try {
+            boolean results = wareSkuService.orderLockStock(wareSkuLockVo);
+            return R.ok();
+        }catch (NoStockException e){
+            return R.error(BizCodeEnum.NO_STOCK_EXCEPTION.getCode(),BizCodeEnum.NO_STOCK_EXCEPTION.getMsg());
+        }
+
+    }
+
+
+    @PostMapping("/hasstock")
+    public R getSkuHasStock(@RequestBody List<Long> skuIds){
+        List<SkuHasStockTo> skuHasStockVos =  wareSkuService.getSkuHasStock(skuIds);
+
+        return R.ok().setData(skuHasStockVos);
+    }
     /**
      * 列表
      */

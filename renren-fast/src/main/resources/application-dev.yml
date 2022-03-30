@@ -1,11 +1,15 @@
 spring:
+    redis:
+        host: 101.201.76.21
+        port: 6379
+        password: pqhyxb
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://101.37.253.192:3306/gulimall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+            url: jdbc:mysql://101.201.76.21:3306/gulimall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
             username: root
-            password: 123456
+            password: pqhloyxb111
             initial-size: 10
             max-active: 100
             min-idle: 10

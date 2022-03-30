@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 /*
@@ -14,7 +16,9 @@ import org.springframework.context.annotation.ComponentScan;
 *       （1）声明接口的每个方法都是调用远程服务的哪个方法
 *   3。开启远程调用服务功能
 * */
-@EnableFeignClients(basePackages = "com.atguigu.gulimall.member.feign")
+@EnableRedisHttpSession
+@EnableFeignClients
+@EnableTransactionManagement
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GulimallMemberApplication {
